@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini IDE ChatGPT - Prototype</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #343a40;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-buttons button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 200px 1fr 300px;
+      height: 100%;
+    }
+    .file-list, .chat-area, .editor {
+      padding: 10px;
+      border-right: 1px solid #ccc;
+      overflow: auto;
+    }
+    .file-list {
+      background: #f8f9fa;
+    }
+    .file-item {
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .file-item:hover, .file-item.active {
+      background: #007bff;
+      color: white;
+    }
+    .editor textarea {
+      width: 100%;
+      height: 100%;
+      font-family: monospace;
+      font-size: 14px;
+      resize: none;
+      padding: 10px;
+      border: none;
+      outline: none;
+    }
+    .chat-area {
+      background: #f1f1f1;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-log {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    .chat-input {
+      display: flex;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+    }
+    .chat-input button {
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>Mini IDE x ChatGPT (Prototype)</div>
+    <div class="header-buttons">
+      <button onclick="createNewFile()">+ File Baru</button>
+      <button onclick="deleteSelectedFile()">🗑️ Hapus</button>
+    </div>
+  </header>
+  <div class="container">
+    <div class="file-list" id="fileList">
+      <div class="file-item active">MainActivity.kt</div>
+      <div class="file-item">AntrianScreen.kt</div>
+      <div class="file-item">PrinterHelper.kt</div>
+    </div>
+    <div class="editor">
+      <textarea id="codeEditor">// Kode dari MainActivity.kt tampil di sini</textarea>
+    </div>
+    <div class="chat-area">
+      <div class="chat-log">
+        <p><strong>ChatGPT:</strong> Mau edit apa bro?</p>
+      </div>
+      <div class="chat-input">
+        <input type="text" placeholder="Tulis perintah di sini...">
+        <button>Kirim</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const fileList = document.getElementById("fileList");
+    const editor = document.getElementById("codeEditor");
+
+    fileList.addEventListener("click", function (e) {
+      if (e.target.classList.contains("file-item")) {
+        [...fileList.children].forEach(item => item.classList.remove("active"));
+        e.target.classList.add("active");
+        editor.value = `// Konten dari ${e.target.textContent}`;
+      }
+    });
+
+    function createNewFile() {
+      const fileName = prompt("Nama file baru?");
+      if (fileName) {
+        const newItem = document.createElement("div");
+        newItem.className = "file-item";
+        newItem.textContent = fileName;
+        fileList.appendChild(newItem);
+      }
+    }
+
+    function deleteSelectedFile() {
+      const active = fileList.querySelector(".file-item.active");
+      if (active && confirm(`Hapus file ${active.textContent}?`)) {
+        fileList.removeChild(active);
+        editor.value = "";
+      }
+    }
+  </script>
+</body>
+</html>
